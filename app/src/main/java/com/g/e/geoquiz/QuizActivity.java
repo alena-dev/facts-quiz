@@ -20,6 +20,7 @@ public class QuizActivity extends AppCompatActivity {
     private ImageButton mNextButton;
     private ImageButton mPrevButton;
     private TextView mQuestionTextView;
+    private TextView mSdkVersionTextView;
 
     private int mCurrentIndex = 0;
     private Question[] mQuestionBank = new Question[]{
@@ -27,25 +28,32 @@ public class QuizActivity extends AppCompatActivity {
             new Question(R.string.question_africa, false),
             new Question(R.string.question_americans, true),
     };
-    private boolean[] mCheatLIst=new boolean[mQuestionBank.length];
+    private boolean mIsCheater;
 
-    private static final String TAG = "QuizActivity";
-    private static final String KEY_CURRENT_QUESTION_INDEX ="com.g.e.geoquiz.current_question_index";
-    private static final String KEY_CHEAT_LIST="com.g.e.geoquiz.cheat_list";
+    private static final String Tag = "QuizActivity";
+    private static final String KEY_INDEX="index";
     private static final int REQUEST_CODE_CHEAT=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG,"onCreate(Bundle) called");
+        Log.d(Tag,"onCreate(Bundle) called");
         setContentView(R.layout.activity_quiz);
 
         if (savedInstanceState!=null){
-            mCurrentIndex=savedInstanceState.getInt(KEY_CURRENT_QUESTION_INDEX,0);
-            mCheatLIst =savedInstanceState.getBooleanArray(KEY_CHEAT_LIST);
+            mCurrentIndex=savedInstanceState.getInt(KEY_INDEX,0);
         }
 
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
+
+        mSdkVersionTextView = (TextView) findViewById(R.id.sdk_version_text_view);
+        DeviceConfigInfo.showSdkVersion(mSdkVersionTextView, QuizActivity.this);
+
+//
+//        mSdkVersionTextView.setText("API level "+String.valueOf(Build.VERSION.SDK_INT));
+
+
+
         updateQuestion();
         mQuestionTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +94,7 @@ public class QuizActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
+                mIsCheater=false;
                 updateQuestion();
             }
         });
@@ -98,6 +107,8 @@ public class QuizActivity extends AppCompatActivity {
                 updateQuestion();
             }
         });
+
+
     }
 
     @Override
@@ -106,13 +117,12 @@ public class QuizActivity extends AppCompatActivity {
 
         if(requestCode==REQUEST_CODE_CHEAT) {
             if (data == null) return;
-
-            if(!mCheatLIst[mCurrentIndex])
-                mCheatLIst[mCurrentIndex]=CheatActivity.wasAnswerShown(data);
+            mIsCheater = CheatActivity.wasAnswerShown(data);
         }
     }
 
     private void updateQuestion() {
+        //Log.d(Tag, "Updating question text", new Exception());
         int question = mQuestionBank[mCurrentIndex].getTextResId();
         mQuestionTextView.setText(question);
     }
@@ -121,7 +131,7 @@ public class QuizActivity extends AppCompatActivity {
         boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
         int messageResId = 0;
 
-        if(mCheatLIst[mCurrentIndex]) {
+        if(mIsCheater) {
             messageResId = R.string.judgment_toast;
         } else {
             if (userPressedTrue == answerIsTrue) {
@@ -139,38 +149,37 @@ public class QuizActivity extends AppCompatActivity {
     @Override
     public void onStart(){
         super.onStart();
-        Log.d(TAG,"onStart() called");
+        Log.d(Tag,"onStart() called");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG,"onResume() called");
+        Log.d(Tag,"onResume() called");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(TAG,"onPause() called");
+        Log.d(Tag,"onPause() called");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Log.d(TAG,"onStop() called");
+        Log.d(Tag,"onStop() called");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG,"onDestroy() called");
+        Log.d(Tag,"onDestroy() called");
     }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        Log.i(TAG, "onSaveInstanceState");
-        savedInstanceState.putInt(KEY_CURRENT_QUESTION_INDEX, mCurrentIndex);
-        savedInstanceState.putBooleanArray(KEY_CHEAT_LIST, mCheatLIst);
+        Log.i(Tag, "onSaveInstanceState");
+        savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
     }
 }

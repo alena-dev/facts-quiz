@@ -19,4 +19,6 @@
 
     <string name="warning_text">Are you sure you want to do this?</string>
 
+    <string name="sdk_version">API version:</string>
+
 </resources>
