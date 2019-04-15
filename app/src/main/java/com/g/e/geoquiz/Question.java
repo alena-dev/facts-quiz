@@ -1,6 +1,14 @@
 package com.g.e.geoquiz;
 
 public class Question {
+    private int mTextResId;
+    private boolean mAnswerTrue;
+
+    public Question (int textResId, boolean answerTrue){
+        mTextResId = textResId;
+        mAnswerTrue = answerTrue;
+    }
+
     public int getTextResId() {
         return mTextResId;
     }
@@ -8,8 +16,6 @@ public class Question {
     public void setTextResId(int textResId) {
         mTextResId = textResId;
     }
-
-    private int mTextResId;
 
     public boolean isAnswerTrue() {
         return mAnswerTrue;
@@ -19,10 +25,4 @@ public class Question {
         mAnswerTrue = answerTrue;
     }
 
-    private boolean mAnswerTrue;
-
-    public Question (int textResId, boolean answerTrue){
-        mTextResId = textResId;
-        mAnswerTrue = answerTrue;
-    }
 }

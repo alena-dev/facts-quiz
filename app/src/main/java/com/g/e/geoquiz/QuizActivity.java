@@ -49,11 +49,6 @@ public class QuizActivity extends AppCompatActivity {
         mSdkVersionTextView = (TextView) findViewById(R.id.sdk_version_text_view);
         DeviceConfigInfo.showSdkVersion(mSdkVersionTextView, QuizActivity.this);
 
-//
-//        mSdkVersionTextView.setText("API level "+String.valueOf(Build.VERSION.SDK_INT));
-
-
-
         updateQuestion();
         mQuestionTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,7 +117,6 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     private void updateQuestion() {
-        //Log.d(Tag, "Updating question text", new Exception());
         int question = mQuestionBank[mCurrentIndex].getTextResId();
         mQuestionTextView.setText(question);
     }
